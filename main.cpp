@@ -45,7 +45,7 @@ void Initialize() {
   InitProgramScreen();
   InitProgramFBO();
   InitBuffer();
-  //InitFBO();
+  InitFBO();
 }
 
 void InitGL() {
@@ -95,22 +95,23 @@ void InitBuffer() {
   glEnableVertexAttribArray(1);
 }
 
-// void InitFBO() {
-//   glGenFramebuffers(1, &fbo);
-//   glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+void InitFBO() {
 
-//   glGenTextures(1, &color_texture);
-//   glBindTexture(GL_TEXTURE_2D, color_texture);
-//   glTexStorage2D(GL_TEXTURE_2D, 9, GL_RGBA8, 512, 512);
+  glGenFramebuffers(1, &fbo);
+  glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-//   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glGenTextures(1, &color_texture);
+  glBindTexture(GL_TEXTURE_2D, color_texture);
+  glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 512, 512);
 
-//   glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, color_texture, 0);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-//   static const GLenum draw_buffers[] = { GL_COLOR_ATTACHMENT0 };
-//   glDrawBuffers(1, draw_buffers);
-// }
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture, 0);
+
+   static const GLenum draw_buffers[] = { GL_COLOR_ATTACHMENT0 };
+   glDrawBuffers(1, draw_buffers);
+}
 
 void Loop() {
 
