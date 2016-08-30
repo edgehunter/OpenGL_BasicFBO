@@ -151,7 +151,7 @@ void Loop() {
 }
 
 void RenderToFBO() {
-  static const GLfloat green[] = { 0.0f, 0.1f, 0.0f, 1.0f };
+  static const GLfloat green[] = { 0.0f, 1.0f, 0.0f, 1.0f }; //texture background is green
 
   glBindFramebuffer(GL_FRAMEBUFFER, fbo);
   glViewport(0, 0, 512, 512); //set view port to texture size
@@ -162,7 +162,7 @@ void RenderToFBO() {
 }
 
 void RenderToScreen() {
-  static const GLfloat blue[] = { 0.0f, 0.0f, 0.3f, 1.0f };
+  static const GLfloat blue[] = { 0.0f, 0.0f, 1.0f, 1.0f }; //screen background is blue
 
   glViewport(0, 0, screenWidth, screenHeight);
   glClearBufferfv(GL_COLOR, 0, blue);
