@@ -44,26 +44,10 @@ void Initialize() {
 
 void InitGL() {
   glfwInit();
-  window = glfwCreateWindow(screenWidth, screenHeight, "Hello World", NULL, NULL);
+  window = glfwCreateWindow(screenWidth, screenHeight, "FBO Demo", NULL, NULL);
 
   glfwMakeContextCurrent(window);
   glewInit();
-
-  //glEnable(GL_DEPTH_TEST); // enable depth-testing
-  //glDepthFunc(GL_LESS);
-
-  //glEnable(GL_CULL_FACE); // cull face
-  //glCullFace(GL_BACK); // cull back face
-  //glFrontFace(GL_CCW); // GL_CCW for counter clock-wise //GL_CW
-
-  // *** POINT SIZE ***
-  //glEnable(GL_PROGRAM_POINT_SIZE); //use gl_PointSize in shader
-  glDisable(GL_PROGRAM_POINT_SIZE);glPointSize(40.0f); //use glPointSize from the code 
-
-  //glEnable(GL_BLEND);
-  //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  //glPolygonMode(GL_FRONT, GL_LINE); //for wireframe
-  //glPolygonMode(GL_BACK, GL_LINE); //for wireframe
 
   glClearColor(0.0f, 0.0f, 0.1f, 1.0f);
 }
@@ -101,12 +85,9 @@ void Loop() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glBindVertexArray(vao);
- glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-    //glDrawArrays(GL_TRIANGLES, 0, 3);
-
-    glPointSize(40.0f);
-    glDrawArrays(GL_POINTS, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
 
     glfwSwapBuffers(window);
 
@@ -135,9 +116,9 @@ void Shutdown() {
   glfwTerminate();
 }
 
-  // a call-back function
-  void OnWindowResize(GLFWwindow* window, int width, int height) {
-    screenWidth = width;
-    screenHeight = height;
-    glViewport(0, 0, screenWidth, screenHeight);
-  }
+// a call-back function
+void OnWindowResize(GLFWwindow* window, int width, int height) {
+  screenWidth = width;
+  screenHeight = height;
+  glViewport(0, 0, screenWidth, screenHeight);
+}
