@@ -75,7 +75,7 @@ void InitProgramScreen() {
 }
 
 void InitBuffer() {
-    static const GLfloat points[] = {
+  static const GLfloat points[] = {
     0.0f,  0.5f,  0.0f,   0.0f, 1.0f,
     0.5f, -0.5f,  0.0f,   0.0f, 0.0f,
     -0.5f, -0.5f,  0.0f,   1.0f, 0.0f
@@ -117,12 +117,13 @@ void Loop() {
   static const GLfloat green[] = { 0.0f, 0.1f, 0.0f, 1.0f };
   static const GLfloat blue[] = { 0.0f, 0.0f, 0.3f, 1.0f };
 
-  glUseProgram(render2FBOProgram);
+
 
   while (!glfwWindowShouldClose(window)) {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glBindVertexArray(vao);
+    glUseProgram(render2FBOProgram);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
     //glBindFramebuffer(GL_FRAMEBUFFER, fbo);
