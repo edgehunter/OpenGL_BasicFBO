@@ -76,9 +76,13 @@ void InitProgramScreen() {
 
 void InitBuffer() {
   static const GLfloat points[] = {
-    0.0f,  0.5f,  0.0f,   0.0f, 1.0f,
-    0.5f, -0.5f,  0.0f,   0.0f, 0.0f,
-    -0.5f, -0.5f,  0.0f,   1.0f, 0.0f
+    -0.5f,  0.5f,  0.0f,   0.0f, 0.0f,
+    0.5f, 0.5f,  0.0f,   1.0f, 0.0f,
+    0.5f, -0.5f,  0.0f,   1.0f, 1.0f,
+
+    0.5f, -0.5f, 0.0f, 1.0f, 1.0f,
+    -0.5f, -0.5f, 0.0f, 0.0f, 1.0f,
+    -0.5f, 0.5f, 0.0f, 0.0f, 0.0f
   };
 
   glGenVertexArrays(1, &vao);
@@ -131,7 +135,7 @@ void Loop() {
     glViewport(0, 0, 512, 512);
     glClearBufferfv(GL_COLOR, 0, green);
     glUseProgram(render2FBOProgram);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
@@ -141,7 +145,7 @@ void Loop() {
     glClearBufferfv(GL_COLOR, 0, blue);
     glBindTexture(GL_TEXTURE_2D, color_texture);
     glUseProgram(render2ScreenProgram);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindTexture(GL_TEXTURE_2D, 0);
 
 
