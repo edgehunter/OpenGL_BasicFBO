@@ -1,6 +1,6 @@
 #version 130
 
-in vec2 texcoord;
+in vec2 outtexcoord;
 
 out vec4 frag_colour;
 void main () {

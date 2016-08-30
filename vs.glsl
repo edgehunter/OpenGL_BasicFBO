@@ -1,10 +1,8 @@
 #version 130
-layout (location =0) in vec3 vp;
-layout (location = 1) in vec2 texcoord;
+in vec3 vp;
+in vec2 texcoord;
 
 out vec2 outtexcoord;
-
-
 
 void main () {
 //gl_PointSize = 20.0f;
