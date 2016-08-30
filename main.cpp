@@ -13,6 +13,7 @@ void Initialize();
 void InitGL();
 void InitProgram();
 void InitBuffer();
+void InitFBO();
 void Loop();
 void Shutdown();
 void OnWindowResize(GLFWwindow* window, int width, int height);
@@ -25,6 +26,8 @@ GLuint program;
 GLuint attribute_vp;
 GLuint vao;
 GLuint vbo;
+GLuint fbo;
+GLuint color_texture;
 
 int main() {
   Initialize();
@@ -40,6 +43,7 @@ void Initialize() {
   InitGL();
   InitProgram();
   InitBuffer();
+  InitFBO();
 }
 
 void InitGL() {
@@ -74,6 +78,23 @@ void InitBuffer() {
   glEnableVertexAttribArray(attribute_vp);
   glVertexAttribPointer (attribute_vp, 3, GL_FLOAT, GL_FALSE, 0, (GLubyte*)NULL);
 
+}
+
+void InitFBO() {
+  glGenFramebuffers(1, &fbo);
+  glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+  glGenTextures(1, &color_texture);
+  glBindTexture(GL_TEXTURE_2D, color_texture);
+  glTexStorage2D(GL_TEXTURE_2D, 9, GL_RGBA8, 512, 512);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, color_texture, 0);
+
+  static const GLenum draw_buffers[] = { GL_COLOR_ATTACHMENT0 };
+  glDrawBuffers(1, draw_buffers);
 }
 
 void Loop() {
