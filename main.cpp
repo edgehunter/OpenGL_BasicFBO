@@ -23,7 +23,7 @@ GLFWwindow* window;
 int screenWidth = 640;
 int screenHeight = 480;
 GLuint render2FBOProgram;
-//GLuint render2ScreenProgram;
+GLuint render2ScreenProgram;
 GLuint vao;
 GLuint vbo;
 GLuint fbo;
@@ -42,8 +42,8 @@ int main() {
 void Initialize() {
   InitGL();
   InitProgramFBO();
-  //InitProgramScreen();
-//  InitProgramFBO();
+  InitProgramScreen();
+  InitProgramFBO();
   InitBuffer();
   //InitFBO();
 }
@@ -66,21 +66,15 @@ void InitProgramFBO() {
   glDeleteShader(fs);
 }
 
-// void InitProgramScreen() {
-//   GLuint vs;
-//   GLuint fs;
-//   render2ScreenProgram = create_program("vs.glsl", "screen.fs.glsl", vs, fs);
-//   glDeleteShader(vs);
-//   glDeleteShader(fs);
-// }
+void InitProgramScreen() {
+  GLuint vs;
+  GLuint fs;
+  render2ScreenProgram = create_program("vs.glsl", "screen.fs.glsl", vs, fs);
+  glDeleteShader(vs);
+  glDeleteShader(fs);
+}
 
 void InitBuffer() {
-  // static const GLfloat points[] = {
-  //   0.0f,  0.5f,  0.0f,   0.0f, 1.0f,
-  //   0.5f, -0.5f,  0.0f,   0.0f, 0.0f,
-  //   -0.5f, -0.5f,  0.0f,   1.0f, 0.0f
-  // };
-
     static const GLfloat points[] = {
     0.0f,  0.5f,  0.0f,   0.0f, 1.0f,
     0.5f, -0.5f,  0.0f,   0.0f, 0.0f,
@@ -172,7 +166,7 @@ void Shutdown() {
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
   glDeleteProgram(render2FBOProgram);
-  //glDeleteProgram(render2ScreenProgram);
+  glDeleteProgram(render2ScreenProgram);
 
   glfwTerminate();
 }
