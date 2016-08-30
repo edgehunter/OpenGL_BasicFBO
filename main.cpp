@@ -124,25 +124,25 @@ void Loop() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glBindVertexArray(vao);
-    glUseProgram(render2FBOProgram);
+    //glUseProgram(render2FBOProgram);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-    //glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    //glViewport(0, 0, 512, 512);
-    //glClearBufferfv(GL_COLOR, 0, green);
-    //glUseProgram(render2FBOProgram);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glViewport(0, 0, 512, 512);
+    glClearBufferfv(GL_COLOR, 0, green);
+    glUseProgram(render2FBOProgram);
     glDrawArrays(GL_TRIANGLES, 0, 3);
-    //glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
 
 
-    //glViewport(0, 0, screenWidth, screenHeight);
-    //glClearBufferfv(GL_COLOR, 0, blue);
-    //glBindTexture(GL_TEXTURE_2D, color_texture);
-    //glUseProgram(render2ScreenProgram);
-    //glDrawArrays(GL_TRIANGLES, 0, 3);
-    //glBindTexture(GL_TEXTURE_2D, 0);
+    glViewport(0, 0, screenWidth, screenHeight);
+    glClearBufferfv(GL_COLOR, 0, blue);
+    glBindTexture(GL_TEXTURE_2D, color_texture);
+    glUseProgram(render2ScreenProgram);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
 
 
