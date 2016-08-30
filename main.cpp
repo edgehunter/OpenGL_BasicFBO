@@ -23,8 +23,7 @@ GLFWwindow* window;
 int screenWidth = 640;
 int screenHeight = 480;
 GLuint render2FBOProgram;
-GLuint vsScreen, fsScreen;
-GLuint render2ScreenProgram;
+//GLuint render2ScreenProgram;
 GLuint vao;
 GLuint vbo;
 GLuint fbo;
@@ -43,9 +42,10 @@ int main() {
 void Initialize() {
   InitGL();
   InitProgramFBO();
-  InitProgramScreen();
+  //InitProgramScreen();
+//  InitProgramFBO();
   InitBuffer();
-  InitFBO();
+  //InitFBO();
 }
 
 void InitGL() {
@@ -66,16 +66,22 @@ void InitProgramFBO() {
   glDeleteShader(fs);
 }
 
-void InitProgramScreen() {
-  GLuint vs;
-  GLuint fs;
-  render2ScreenProgram = create_program("vs.glsl", "screen.fs.glsl", vs, fs);
-  glDeleteShader(vs);
-  glDeleteShader(fs);
-}
+// void InitProgramScreen() {
+//   GLuint vs;
+//   GLuint fs;
+//   render2ScreenProgram = create_program("vs.glsl", "screen.fs.glsl", vs, fs);
+//   glDeleteShader(vs);
+//   glDeleteShader(fs);
+// }
 
 void InitBuffer() {
-  static const GLfloat points[] = {
+  // static const GLfloat points[] = {
+  //   0.0f,  0.5f,  0.0f,   0.0f, 1.0f,
+  //   0.5f, -0.5f,  0.0f,   0.0f, 0.0f,
+  //   -0.5f, -0.5f,  0.0f,   1.0f, 0.0f
+  // };
+
+    static const GLfloat points[] = {
     0.0f,  0.5f,  0.0f,   0.0f, 1.0f,
     0.5f, -0.5f,  0.0f,   0.0f, 0.0f,
     -0.5f, -0.5f,  0.0f,   1.0f, 0.0f
@@ -95,50 +101,52 @@ void InitBuffer() {
   glEnableVertexAttribArray(1);
 }
 
-void InitFBO() {
-  glGenFramebuffers(1, &fbo);
-  glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+// void InitFBO() {
+//   glGenFramebuffers(1, &fbo);
+//   glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-  glGenTextures(1, &color_texture);
-  glBindTexture(GL_TEXTURE_2D, color_texture);
-  glTexStorage2D(GL_TEXTURE_2D, 9, GL_RGBA8, 512, 512);
+//   glGenTextures(1, &color_texture);
+//   glBindTexture(GL_TEXTURE_2D, color_texture);
+//   glTexStorage2D(GL_TEXTURE_2D, 9, GL_RGBA8, 512, 512);
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, color_texture, 0);
+//   glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, color_texture, 0);
 
-  static const GLenum draw_buffers[] = { GL_COLOR_ATTACHMENT0 };
-  glDrawBuffers(1, draw_buffers);
-}
+//   static const GLenum draw_buffers[] = { GL_COLOR_ATTACHMENT0 };
+//   glDrawBuffers(1, draw_buffers);
+// }
 
 void Loop() {
 
   static const GLfloat green[] = { 0.0f, 0.1f, 0.0f, 1.0f };
   static const GLfloat blue[] = { 0.0f, 0.0f, 0.3f, 1.0f };
 
+  glUseProgram(render2FBOProgram);
 
   while (!glfwWindowShouldClose(window)) {
 
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    glViewport(0, 0, 512, 512);
-    glClearBufferfv(GL_COLOR, 0, green);
-    glUseProgram(render2FBOProgram);
+    //glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    //glViewport(0, 0, 512, 512);
+    //glClearBufferfv(GL_COLOR, 0, green);
+    //glUseProgram(render2FBOProgram);
     glDrawArrays(GL_TRIANGLES, 0, 3);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    //glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
 
 
-    glViewport(0, 0, screenWidth, screenHeight);
-    glClearBufferfv(GL_COLOR, 0, blue);
-    glBindTexture(GL_TEXTURE_2D, color_texture);
-    glUseProgram(render2ScreenProgram);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    //glViewport(0, 0, screenWidth, screenHeight);
+    //glClearBufferfv(GL_COLOR, 0, blue);
+    //glBindTexture(GL_TEXTURE_2D, color_texture);
+    //glUseProgram(render2ScreenProgram);
+    //glDrawArrays(GL_TRIANGLES, 0, 3);
+    //glBindTexture(GL_TEXTURE_2D, 0);
 
 
 
@@ -164,7 +172,7 @@ void Shutdown() {
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
   glDeleteProgram(render2FBOProgram);
-  glDeleteProgram(render2ScreenProgram);
+  //glDeleteProgram(render2ScreenProgram);
 
   glfwTerminate();
 }
