@@ -11,7 +11,8 @@
 
 void Initialize();
 void InitGL();
-void InitProgram();
+void InitProgramFBO();
+void InitProgramScreen();
 void InitBuffer();
 void InitFBO();
 void Loop();
@@ -21,9 +22,9 @@ void OnWindowResize(GLFWwindow* window, int width, int height);
 GLFWwindow* window;
 int screenWidth = 640;
 int screenHeight = 480;
-GLuint vs, fs;
-GLuint program;
-GLuint attribute_vp;
+GLuint render2FBOProgram;
+GLuint vsScreen, fsScreen;
+GLuint render2ScreenProgram;
 GLuint vao;
 GLuint vbo;
 GLuint fbo;
@@ -41,7 +42,8 @@ int main() {
 
 void Initialize() {
   InitGL();
-  InitProgram();
+  InitProgramFBO();
+  InitProgramScreen();
   InitBuffer();
   InitFBO();
 }
@@ -56,17 +58,27 @@ void InitGL() {
   glClearColor(0.0f, 0.0f, 0.1f, 1.0f);
 }
 
-void InitProgram() {
-  program = create_program("basicshader.vs.glsl", "basicshader.fs.glsl", vs, fs);
+void InitProgramFBO() {
+  GLuint vs;
+  GLuint fs;
+  render2FBOProgram = create_program("vs.glsl", "fbo.fs.glsl", vs, fs);
+  glDeleteShader(vs);
+  glDeleteShader(fs);
+}
 
-  attribute_vp = get_attrib(program, "vp");
+void InitProgramScreen() {
+  GLuint vs;
+  GLuint fs;
+  render2ScreenProgram = create_program("vs.glsl", "screen.fs.glsl", vs, fs);
+  glDeleteShader(vs);
+  glDeleteShader(fs);
 }
 
 void InitBuffer() {
-  float points[] = {
-    0.0f,  0.5f,  0.0f,
-    0.5f, -0.5f,  0.0f,
-    -0.5f, -0.5f,  0.0f
+  static const GLfloat points[] = {
+    0.0f,  0.5f,  0.0f,   0.0f, 1.0f,
+    0.5f, -0.5f,  0.0f,   0.0f, 0.0f,
+    -0.5f, -0.5f,  0.0f,   1.0f, 0.0f
   };
 
   glGenVertexArrays(1, &vao);
@@ -74,10 +86,13 @@ void InitBuffer() {
 
   glGenBuffers(1, &vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), points, GL_STATIC_DRAW);
-  glEnableVertexAttribArray(attribute_vp);
-  glVertexAttribPointer (attribute_vp, 3, GL_FLOAT, GL_FALSE, 0, (GLubyte*)NULL);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
 
+  glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(GLfloat), (GLubyte*)NULL);
+  glEnableVertexAttribArray(0);
+
+  glVertexAttribPointer (1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(GLfloat), (GLvoid *)(3 * sizeof(GLfloat)));
+  glEnableVertexAttribArray(1);
 }
 
 void InitFBO() {
@@ -99,16 +114,38 @@ void InitFBO() {
 
 void Loop() {
 
-  glUseProgram(program);
+  static const GLfloat green[] = { 0.0f, 0.1f, 0.0f, 1.0f };
+  static const GLfloat blue[] = { 0.0f, 0.0f, 0.3f, 1.0f };
+
 
   while (!glfwWindowShouldClose(window)) {
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glViewport(0, 0, 512, 512);
+    glClearBufferfv(GL_COLOR, 0, green);
+    glUseProgram(render2FBOProgram);
     glDrawArrays(GL_TRIANGLES, 0, 3);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+
+
+    glViewport(0, 0, screenWidth, screenHeight);
+    glClearBufferfv(GL_COLOR, 0, blue);
+    glBindTexture(GL_TEXTURE_2D, color_texture);
+    glUseProgram(render2ScreenProgram);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+
+
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glBindVertexArray(vao);
+    //glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    //glDrawArrays(GL_TRIANGLES, 0, 3);
 
     glfwSwapBuffers(window);
 
@@ -124,15 +161,10 @@ void Shutdown() {
 
   glUseProgram(0);
 
-  glDetachShader(program, vs);
-  glDetachShader(program, fs);
-
-  glDeleteShader(fs);
-  glDeleteShader(vs);
-
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  glDeleteProgram(program);
+  glDeleteProgram(render2FBOProgram);
+  glDeleteProgram(render2ScreenProgram);
 
   glfwTerminate();
 }
