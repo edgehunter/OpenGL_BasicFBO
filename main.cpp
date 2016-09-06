@@ -37,7 +37,6 @@ int main() {
 
 void Initialize() {
   InitGL();
-  InitProgramFBO();
   InitProgramScreen();
   InitProgramFBO();
   InitBuffer();
